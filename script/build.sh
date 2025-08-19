@@ -32,9 +32,9 @@ FAILURES=0
 GXX=$(which g++)
 LD_PATTERN=$(g++ -print-prog-name=ld | sed 's|/|\\/|g')
 
-SOURCE_DIR="/c/Users/brass/PracticeCelesteClone/source"    # relative to script/ folder
-BUILD_DIR="/c/Users/brass/PracticeCelesteClone/build"
-BIN_DIR="/c/Users/brass/PracticeCelesteClone/bin"
+SOURCE_DIR="%USERPROFILE%/PracticeCelesteClone/source"    # relative to script/ folder
+BUILD_DIR="%USERPROFILE%/PracticeCelesteClone/build"
+BIN_DIR="%USERPROFILE%/PracticeCelesteClone/bin"
 EXECUTABLE="CelesteClone.exe"
 
 #echo "Clearing Build Directory"
