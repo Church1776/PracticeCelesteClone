@@ -1,49 +1,45 @@
 #!/bin/sh
 
+### ---Prep Variables--- ###
+ARCHIVE_BUILD=0
 CLEAN_BUILD=0
+COMP_ERRORS=0
 DEBUG_FLAGS=""
 DEBUG_MODE=0
-ARCHIVE_BUILD=0
+EXPERIMENTAL=1
+SOURCE_DIR="$HOME/PracticeCelesteClone/source"    ## <-- for the human code.
+BUILD_DIR="$HOME/PracticeCelesteClone/build"    ## <-- for the compiled objects.
+BIN_DIR="$HOME/PracticeCelesteClone/bin"    ## <-- for the executables.
+EXECUTABLE="CelesteClone.exe"
+INCLUDE_DIRS=$(find "$SOURCE_DIR" -type d)
+INCLUDE_FLAGS=""
+SRC_FILES=$(find "$SOURCE_DIR" -name '*.cpp')
+for dir in $INCLUDE_DIRS; do
+    INCLUDE_FLAGS="$INCLUDE_FLAGS -I$dir"       ## <-- so I don't have to manually tell the compiler where to search for my files.
+done
 
-echo "Building..."
+GXX=$(which g++)
+LD_PATTERN=$(g++ -print-prog-name=ld | sed 's|/|\\/|g')     ## <-- finding compiler and linker.
+LINK_CMD="$GXX -o "$BIN_DIR/$EXECUTABLE""
 
-for arg in "$@"; do
+for arg in "$@"; do  ## <-- evaluates all args passed. any case matched has it's respective code executed.
     case "$arg" in
+        noexp)
+            EXPERIMENTAL=0
+            ;;
         clean)
             CLEAN_BUILD=1
             ;;
         archive)
             ARCHIVE_BUILD=1
             ;;
-        *)
-            DEBUG_FLAGS="$DEBUG_FLAGS $arg"
+         *)
+            echo "Grabbing debug info... \"$arg\""
+            DEBUG_FLAGS="$DEBUG_FLAGS $arg" ## <-- for manual debug input
             DEBUG_MODE=1
             ;;
     esac
 done
-
-if [ $DEBUG_MODE -ne 0 ]; then
-    echo "Grabbing debug info..."
-fi
-
-FAILURES=0
-
-#echo "Finding compiler"
-GXX=$(which g++)
-LD_PATTERN=$(g++ -print-prog-name=ld | sed 's|/|\\/|g')
-
-SOURCE_DIR="/c/Users/brass/PracticeCelesteClone/source"    # relative to script/ folder
-BUILD_DIR="/c/Users/brass/PracticeCelesteClone/build"
-BIN_DIR="/c/Users/brass/PracticeCelesteClone/bin"
-EXECUTABLE="CelesteClone.exe"
-
-#echo "Clearing Build Directory"
-if [ "$CLEAN_BUILD" -eq 1 ]; then
-    echo "Build Directory CLeaned."
-    rm -rf "$BUILD_DIR"/*
-    rm -rf "$BIN_DIR"/*
-    exit 0
-fi
 
 if [ "$ARCHIVE_BUILD" -eq 1 ]; then
     if [ -d "$BUILD_DIR" ] || [ -d "$BIN_DIR" ]; then
@@ -56,64 +52,56 @@ if [ "$ARCHIVE_BUILD" -eq 1 ]; then
     fi
 fi
 
-#echo "Resetting build directory"
-rm -rf "$BUILD_DIR"/*
+if [ "$CLEAN_BUILD" -eq 1 ]; then  ## <-- difference between this and the later 'rm' is this exits without building.
+    rm -rf "$BUILD_DIR"/*
+    rm -rf "$BIN_DIR"/*
+    echo "Previous Build Cleaned"
+    exit 0
+fi
+
+### ---Build Initialized--- ###
+echo "Building..."
+
+rm -rf "$BUILD_DIR"/*      ## <-- resetting build directory for new build.
 rm -rf "$BIN_DIR"/*
 
-#echo "Grabbing Sub Directories"
-INCLUDE_DIRS=$(find "$SOURCE_DIR" -type d)
-INCLUDE_FLAGS=""
-for dir in $INCLUDE_DIRS; do
-    INCLUDE_FLAGS="$INCLUDE_FLAGS -I$dir"
-done
-
-#echo "Finding Source Files"
-SRC_FILES=$(find "$SOURCE_DIR" -name '*.cpp')
-
-#echo "Mirroring Object Directories"
-mkdir -p "$BIN_DIR"
-LINK_CMD="$GXX -o "$BIN_DIR/$EXECUTABLE""
-
-#echo "Compiling source..."
-for src in $SRC_FILES; do
-    # Path relative to SOURCE_DIR (e.g. "game/player.cpp")
+echo "Compiling..."
+for src in $SRC_FILES; do    
     rel_path="${src#$SOURCE_DIR/}"
-    # Matching object file path inside build/ (e.g. "build/game/player.o")
-    obj="$BUILD_DIR/${rel_path%.cpp}.o"
-
-    # Ensure subdir exists in build/
+    obj="$BUILD_DIR/${rel_path%.cpp}.o"      ## <-- this top section preps the build directory.
     mkdir -p "$(dirname "$obj")"
-
-    # Compile
     "$GXX" -std=c++23 $INCLUDE_FLAGS -c $DEBUG_FLAGS "$src" -o "$obj" 2>&1 | sed -E \
         -e 's|C:/[^[:space:]]*[/]||g' \
         -e 's/candidate:/\
         candidate:/g' \
-        -e 's|^[[:space:]]*||'
-    
+        -e 's|^[[:space:]]*||'    
     if [ ${PIPESTATUS[0]} -ne 0 ]; then
-        FAILURES=$((FAILURES + 1))
-    fi
-
-    #echo "Preparing objects for linker"
-    LINK_CMD="$LINK_CMD \"$obj\""
+        COMP_ERRORS=$((COMP_ERRORS + 1))       ## <-- records compile errors.
+    fi    
+    LINK_CMD="$LINK_CMD \"$obj\""   ## <-- needed for prepping link command.
 done
 
-if [ $FAILURES -ne 0 ]; then
-    echo "Build finished with $FAILURES errors."
+if [ $COMP_ERRORS -ne 0 ]; then
+    echo "Build finished with $COMP_ERRORS errors."
     exit 1
 fi
 
-#echo "Linking objects..."
+if [ $EXPERIMENTAL -eq 1 ]; then            ## <---This is the default. I want it so I can use the C++23 stuff that hasn't made it to the standard linker library.
+    LINK_CMD="$LINK_CMD \"-lstdc++exp\""
+fi
+
+echo "Linking..."
 eval "$LINK_CMD" 2>&1 | sed -E \
     -e "s|$LD_PATTERN:||g" \
     -e "s|[^[:space:]]*\.o:||g" \
+    -e 's|C:/[^[:space:]]*[/]||g' \
     -e "s|$SOURCE_DIR/||g" \
-    -e 's|^[[:space:]]*||'
+    -e 's|\(.[^[:space:]]*[]]|(|'
 
-if [ ${PIPESTATUS[0]} -eq 0 ]; then
-    echo "Successful!"
-else
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
     echo "Failed."
     exit 1
 fi
+
+echo "Successful!"
+exit 0

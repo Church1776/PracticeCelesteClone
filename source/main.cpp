@@ -1,17 +1,16 @@
 #include <iostream>
-#include <fstream>
+
+static bool running{true};
 
 int main(){
     
-    std::ofstream myfile;
-
-    myfile.open ("Testing.txt");
-
-    myfile << "Hello World!\n";
-
-    myfile.close();
-
-    myfile << "Did this line make it???\n";
-
+    while(running){
+        
+        // Update
+        std::cout << "Want to stop?(0. Yes, 1. No)\n";
+        std::cin >> running;
+    }
+    
+    std::cout << "\nProgram ended with no errors.\n";
     return 0;
 }

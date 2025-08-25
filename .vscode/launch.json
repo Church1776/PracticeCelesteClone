@@ -5,7 +5,7 @@
             "name": "Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/CelesteClone.exe",
+            "program": "${workspaceFolder}/bin/CelesteClone.exe",
             "args": [],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
