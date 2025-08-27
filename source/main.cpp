@@ -47,8 +47,8 @@ bool create_window(int width, int height, const char* wndw_name){
     WNDCLASSA wc{};
         wc.style = {};
         wc.hInstance = instance;
-        wc.hCursor = LoadCursorA(instance, IDC_ARROW);
-        wc.hIcon = LoadIconA(instance, IDI_APPLICATION);
+        wc.hCursor = LoadCursor(instance, IDC_ARROW);
+        wc.hIcon = LoadIcon(instance, IDI_APPLICATION);
         wc.lpszClassName = "My Window";
         wc.lpfnWndProc = callback_to_window;
     

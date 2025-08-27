@@ -1,6 +1,8 @@
 #!/bin/bash
 
 ### ---Prep Variables--- ###
+PROJECT_DIR="$1"
+shift
 ARCHIVE_BUILD=0
 CLEAN_BUILD=0
 COMP_ERRORS=0
@@ -8,9 +10,9 @@ DEBUG_FLAGS=""
 DEBUG_MODE=0
 EXPERIMENTAL=1
 NO_CLEAN=0
-SOURCE_DIR="$HOME/PracticeCelesteClone/source"    ## <-- for the human code.
-BUILD_DIR="$HOME/PracticeCelesteClone/build"    ## <-- for the compiled objects.
-BIN_DIR="$HOME/PracticeCelesteClone/bin"    ## <-- for the executables.
+SOURCE_DIR="$PROJECT_DIR/source"    ## <-- for the human code.
+BUILD_DIR="$PROJECT_DIR/build"    ## <-- for the compiled objects.
+BIN_DIR="$PROJECT_DIR/bin"    ## <-- for the executables.
 EXECUTABLE="CelesteClone.exe"
 INCLUDE_DIRS=$(find "$SOURCE_DIR" -type d)
 INCLUDE_FLAGS=""
