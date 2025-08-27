@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ### ---Prep Variables--- ###
 ARCHIVE_BUILD=0
@@ -7,6 +7,7 @@ COMP_ERRORS=0
 DEBUG_FLAGS=""
 DEBUG_MODE=0
 EXPERIMENTAL=1
+NO_CLEAN=0
 SOURCE_DIR="$HOME/PracticeCelesteClone/source"    ## <-- for the human code.
 BUILD_DIR="$HOME/PracticeCelesteClone/build"    ## <-- for the compiled objects.
 BIN_DIR="$HOME/PracticeCelesteClone/bin"    ## <-- for the executables.
@@ -32,6 +33,10 @@ for arg in "$@"; do  ## <-- evaluates all args passed. any case matched has it's
             ;;
         archive)
             ARCHIVE_BUILD=1
+            CLEAN_BUILD=1
+            ;;
+        noclean)
+            NO_CLEAN=1
             ;;
          *)
             echo "Grabbing debug info... \"$arg\""
@@ -44,12 +49,17 @@ done
 if [ "$ARCHIVE_BUILD" -eq 1 ]; then
     if [ -d "$BUILD_DIR" ] || [ -d "$BIN_DIR" ]; then
         TIMESTAMP=$(date +%Y-%m-%d_%H.%M.%S)
-        ARCHIVE_DIR="../old_build_$TIMESTAMP"
+        ARCHIVE_DIR="$BUILD_DIR/../archive/old_build_$TIMESTAMP"
         echo "Archiving current build to $ARCHIVE_DIR..."
         mkdir -p "$ARCHIVE_DIR"
-        [ -d "$BUILD_DIR" ] && mv "$BUILD_DIR" "$ARCHIVE_DIR/"
-        [ -d "$BIN_DIR" ] && mv "$BIN_DIR" "$ARCHIVE_DIR/"
+        [ -d "$BUILD_DIR" ] && cp -r "$BUILD_DIR" "$ARCHIVE_DIR/"
+        [ -d "$BIN_DIR" ] && cp -r  "$BIN_DIR" "$ARCHIVE_DIR/"
     fi
+fi
+
+if [ "$NO_CLEAN" -eq 1 ]; then
+    echo "Old Directory Preserved"
+    exit 0
 fi
 
 if [ "$CLEAN_BUILD" -eq 1 ]; then  ## <-- difference between this and the later 'rm' is this exits without building.
@@ -90,6 +100,7 @@ if [ $EXPERIMENTAL -eq 1 ]; then            ## <---This is the default. I want i
     LINK_CMD="$LINK_CMD \"-lstdc++exp\""
 fi
 
+mkdir -p "$BIN_DIR"
 echo "Linking..."
 eval "$LINK_CMD" 2>&1 | sed -E \
     -e "s|$LD_PATTERN:||g" \

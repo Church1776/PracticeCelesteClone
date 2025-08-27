@@ -12,8 +12,10 @@
 build
 .vs
 #.vscode
+archive
+CelesteClone
 CppClassProject
 Reference Material
 c_cpp_properties.json
-settings.json
+
 .clangd
