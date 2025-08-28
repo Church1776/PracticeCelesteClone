@@ -22,7 +22,7 @@ void update_window();
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <windows.h>
-#include "logger_lib.h"
+#include "main_game_lib.h"
 
 static HWND window;
 
