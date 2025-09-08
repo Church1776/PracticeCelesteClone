@@ -3,23 +3,30 @@
 ### ---Prep Variables--- ###
 PROJECT_DIR="$1"
 shift
+
 ARCHIVE_BUILD=0
 CLEAN_BUILD=0
-COMP_ERRORS=0
-DEBUG_FLAGS=""
-DEBUG_MODE=0
 EXPERIMENTAL=1
 NO_CLEAN=0
+
+DEBUG_MODE=0
+DEBUG_FLAGS=""
+
+LINKER_LIBS="-lgdi32 -lopengl32"
+
+COMP_ERRORS=0
+
 SOURCE_DIR="$PROJECT_DIR/source"    ## <-- for the human code.
 BUILD_DIR="$PROJECT_DIR/build"    ## <-- for the compiled objects.
 BIN_DIR="$PROJECT_DIR/bin"    ## <-- for the executables.
-EXECUTABLE="CelesteClone.exe"
 INCLUDE_DIRS=$(find "$SOURCE_DIR" -type d)
 INCLUDE_FLAGS=""
 SRC_FILES=$(find "$SOURCE_DIR" -name '*.cpp')
 for dir in $INCLUDE_DIRS; do
     INCLUDE_FLAGS="$INCLUDE_FLAGS -I$dir"       ## <-- so I don't have to manually tell the compiler where to search for my files.
 done
+
+EXECUTABLE="CelesteClone.exe"
 
 GXX=$(which g++)
 LD_PATTERN=$(g++ -print-prog-name=ld | sed 's|/|\\/|g')     ## <-- finding compiler and linker.
@@ -38,6 +45,10 @@ for arg in "$@"; do  ## <-- evaluates all args passed. any case matched has it's
             CLEAN_BUILD=1
             ;;
         noclean)
+            if [ $ARCHIVE_BUILD -eq 0 ]; then
+                echo "Invalid. Qualifier 'noclean' must come after 'archive' to be valid."
+                exit 0
+            fi
             NO_CLEAN=1
             ;;
          *)
@@ -98,9 +109,11 @@ if [ $COMP_ERRORS -ne 0 ]; then
     exit 1
 fi
 
-if [ $EXPERIMENTAL -eq 1 ]; then            ## <---This is the default. I want it so I can use the C++23 stuff that hasn't made it to the standard linker library.
-    LINK_CMD="$LINK_CMD \"-lstdc++exp\""
+if [ $EXPERIMENTAL -eq 1 ]; then        ## This is the default. I want it so I can use the C++23 stuff that hasn't made it to the standard library.
+    LINK_CMD="$LINK_CMD -lstdc++exp"    ## I also want the ability to turn it off with a simple qualifier if necessary.
 fi
+
+LINK_CMD="$LINK_CMD $LINKER_LIBS"        ## <---This will add the necessary linker libraries for the game.
 
 mkdir -p "$BIN_DIR"
 echo "Linking..."

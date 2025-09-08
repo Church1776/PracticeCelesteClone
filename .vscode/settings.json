@@ -59,8 +59,7 @@
     "editor.autoIndent": "full",
 
     "C_Cpp.default.cppStandard": "c++23",
-    "C_Cpp.default.customConfigurationVariables": {
-    },
+    "C_Cpp.default.customConfigurationVariables": {},
     "workbench.editor.empty.hint": "hidden",
     "C_Cpp.default.cStandard": "c23",
     "cmake.buildTask": true,
@@ -71,5 +70,6 @@
     "explorer.confirmDelete": false,
     "git.autofetch": true,
     "workbench.settings.editor": "json",
-    "editor.trimAutoWhitespace": false
+    "editor.trimAutoWhitespace": false,
+    "C_Cpp.default.browse.path": []
 }
