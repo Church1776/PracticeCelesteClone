@@ -9,6 +9,7 @@ namespace cpp::cstring {
     using std::strcmp;
     using std::strncmp;
     using std::memcpy;
+    using std::strerror;
 }
 
 #endif//CPP_CSTRING_HPP

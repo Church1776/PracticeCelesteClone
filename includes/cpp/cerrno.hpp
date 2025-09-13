@@ -5,7 +5,6 @@
 
 namespace cpp::cerrno {
     using std::errno;
-    using std::strerror;
 }
 
 #endif//CPP_CERRNO_HPP

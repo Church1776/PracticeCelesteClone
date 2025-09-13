@@ -1,5 +1,5 @@
-#ifndef CPP_OPTIONAL_HPP
-#define CPP_OPTIONAL_HPP
+#ifndef CPP_OPT_HPP
+#define CPP_OPT_HPP
 
 #include <optional>
 

@@ -1,9 +1,9 @@
-#ifndef CPP_FILESYSTEM_HPP
-#define CPP_FILESYSTEM_HPP
+#ifndef CPP_FS_HPP
+#define CPP_FS_HPP
 
 #include <filesystem>
 
-namespace cpp::filesystem {
+namespace cpp::fs {
     using std::filesystem::path;
     using std::filesystem::directory_entry;
     using std::filesystem::exists;
@@ -14,6 +14,10 @@ namespace cpp::filesystem {
     using std::filesystem::directory_iterator;
     using std::filesystem::recursive_directory_iterator;
     using std::filesystem::copy;
+    using std::filesystem::file_status;
+    using std::filesystem::remove_all;
+    using std::filesystem::rename;
+    using std::filesystem::last_write_time;
 }
 
-#endif//CPP_FILESYSTEM_HPP
+#endif//CPP_FS_HPP

@@ -97,7 +97,10 @@
         "flat_map": "cpp",
         "flat_set": "cpp",
         "queue": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "cassert": "cpp",
+        "cerrno": "cpp",
+        "filesystem": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -14,8 +14,6 @@ namespace cpp::string {
     using std::getline;
     using std::string_view;
     using std::u8string;
-    using std::starts_with;
-    using std::ends_with;
 }
 
 #endif//CPP_STRING_HPP

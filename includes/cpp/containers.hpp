@@ -11,6 +11,7 @@
 #include <deque>
 #include <forward_list>
 #include <span>
+#include <initializer_list>
 
 namespace cpp::containers {
     using std::vector;
@@ -26,6 +27,8 @@ namespace cpp::containers {
     using std::queue;
     using std::priority_queue;
     using std::stack;
+    using std::initializer_list;
+    
 }
 
 #endif//CPP_CONTAINERS_HPP

@@ -4,7 +4,8 @@
 #include <cassert>
 
 namespace cpp::cassert {
-    using std::assert;
+    using static_assert;
+    using assert;
 }
 
 #endif//CPP_CASSERT_HPP
