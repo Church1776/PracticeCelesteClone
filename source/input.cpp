@@ -1,6 +1,6 @@
 #include "input.h"
 #include "platform.h"
-#include "main_game_lib.h"
+#include "base_lib.h"
 #include "gl_renderer.h"
 
 //##################################################################################################################################

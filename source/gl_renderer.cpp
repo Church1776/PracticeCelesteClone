@@ -1,6 +1,6 @@
 #include "input.h"
 #include "platform.h"
-#include "main_game_lib.h"
+#include "base_lib.h"
 #include "gl_renderer.h"
 
 //##################################################################################################################################
@@ -112,7 +112,7 @@ void gl_load_functions(){
     glViewport_ptr = (PFNGLVIEWPORTPROC)platform_load_gl_function("glViewport");
 }
 
-void gl_load_platform_extensions(){
+void gl_load_extensions(){
     
     //##### ---Windows Extension Functions--- #####
     #ifdef  _WIN32    
@@ -271,7 +271,7 @@ void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum se
 
 bool gl_init(BumpAllocator* transientStorage){
     
-    gl_load_functions();
+    //gl_load_functions();
     glDebugMessageCallback(&gl_debug_callback, nullptr);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glEnable(GL_DEBUG_OUTPUT);

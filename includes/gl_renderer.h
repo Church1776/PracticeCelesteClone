@@ -126,7 +126,7 @@ inline PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB_ptr;
 //##################################################################################################################################
 
 void gl_load_functions();  //### <--This will assign the pointers to their respective function.
-void gl_load_platform_extensions(); //### <--This is for platform specific extensions.
+void gl_load_extensions(); //### <--This is for platform specific extensions.
 
 //##################################################################################################################################
 //                                                        Pointer Wrappers

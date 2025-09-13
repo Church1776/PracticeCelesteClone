@@ -1,6 +1,6 @@
 #include "input.h"
 #include "platform.h"
-#include "main_game_lib.h"
+#include "base_lib.h"
 #include "gl_renderer.h"
 
 //##################################################################################################################################
@@ -106,7 +106,7 @@ bool create_window(int width, int height, const char* wndw_name){
         }
         
         //##### ---This is to grab the windows extensions for creating the true window context for our game--- #####
-        gl_load_platform_extensions(); 
+        gl_load_extensions();
         
         if(!wglCreateContextAttribsARB_ptr || !wglChoosePixelFormatARB_ptr){
             SM_ASSERT(false, "Failed to load Windows OpenGL Extension functions");
@@ -203,7 +203,7 @@ bool create_window(int width, int height, const char* wndw_name){
         }
     }
     
-    //gl_load_functions();
+    gl_load_functions();
     
     ShowWindow(window, SW_SHOW);
     return true;

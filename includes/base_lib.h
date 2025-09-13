@@ -1,5 +1,5 @@
-#ifndef MAIN_GAME_LIB_H
-#define MAIN_GAME_LIB_H
+#ifndef BASE_LIB_H
+#define BASE_LIB_H
 
 #include <cstdio>
 #include <cstdlib>
@@ -122,4 +122,4 @@ bool copy_file(const char* fileName, const char* outputName, char* buffer);
 bool copy_file(const char* fileName, const char* outputName, BumpAllocator* alloc);
 
 
-#endif//MAIN_GAME_LIB_H
+#endif//BASE_LIB_H

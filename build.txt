@@ -1,0 +1,89 @@
+#!/bin/bash
+
+### --- This file is meant to be used when in the terminal to call the local project whose directory you're currently working in/opened to.
+
+### --- Add this file to an already existing default $PATH environment directory or create your own folder
+### --- and add that folder as a $PATH in your environment variables yourself. Your only limitation is that
+### --- your terminal must call this script from within the project directory you wish to use it. With this
+### --- script you'll be able to call to the local script from within any project directory you work in.
+### --- Just remember that you must have your terminal open to the project directory root folder. If you are
+### --- in any sub folders the script will not work.
+
+#################################################################################################################################
+##### --- MAKE SURE TO RENAME THE SCRIPT 'build.sh'. SCRIPT CAN"T BE EXECUTED IF YOU DON"T CHANGE THE FILE EXTENSION!!! --- #####
+#################################################################################################################################
+
+# ---Start from the current working directory---
+
+PROJECT_NAME=$(pwd)
+echo ""
+OS="$(uname -s)"; echo "Building on platform $OS:"
+DEBUG_ARGS=""
+QUALIFIERS=""
+SCRIPT=""
+
+#####`` ---Grabs arguments to send to local build script--- #####
+for arg in "$@"; do
+    case "$arg" in
+        auto | noauto)
+            QUALIFIERS="$QUALIFIERS $arg"
+            ;;
+        clean | noclean)
+            QUALIFIERS="$QUALIFIERS $arg"
+            ;;
+        link | nolink)
+            QUALIFIERS="$QUALIFIERS $arg"
+            ;;
+        archive | noarchive)
+            QUALIFIERS="$QUALIFIERS $arg"
+            ;;
+        help | nohelp)
+            QUALIFIERS="$QUALIFIERS $arg"
+            ;;
+        dll | nodll)
+            QUALIFIERS="$QUALIFIERS $arg"
+            ;;
+        lib | nolib)
+            QUALIFIERS="$QUALIFIERS $arg"
+            ;;
+        pch | nopch)
+            QUALIFIERS="$QUALIFIERS $arg"
+            ;;
+        no)
+            QUALIFIERS="$QUALIFIERS $arg"
+            ;;
+        *)
+            DEBUG_ARGS="$DEBUG_ARGS $arg"
+            ;;
+    esac
+done
+
+##### ---Assigns for build script in the projects directory based on platform--- #####
+case "$OS" in
+    Darwin*)
+        SCRIPT="$PROJECT_NAME/scripts/build_macos.sh"
+        ;;
+    Linux*)
+        SCRIPT="$PROJECT_NAME/scripts/build_linux.sh"
+        ;;
+    MINGW*|MSYS*|CYGWIN*)
+        SCRIPT="$PROJECT_NAME/scripts/build_windows.sh"
+        ;;
+    *)
+        echo "Unsupported OS: $OS"
+        exit 1
+        ;;
+esac
+
+##### ---Checks if the script was found and executable--- #####
+if [[ -z $SCRIPT ]]; then
+    echo "Build script not found in $PROJECT_NAME"
+    exit 1
+fi
+if [[ ! -x $SCRIPT ]]; then
+    echo "Build script found but not executable: $SCRIPT"
+    exit 1
+fi
+
+"$SCRIPT" "$PROJECT_NAME" $QUALIFIERS $DEBUG_ARGS
+exit 0
